@@ -1,4 +1,4 @@
-#= require ../store
+Store = require '../store.coffee'
 
 class MemoryStore extends Store
   constructor: ->  @components = []
@@ -12,3 +12,5 @@ class MemoryStore extends Store
     setTimeout =>
       @components[name] = JSON.stringify @serialize component
       callback?()
+
+module.exports = MemoryStore

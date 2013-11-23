@@ -1,0 +1,24 @@
+{
+  "name": "",
+  "version": "",
+  "description": "",
+  "homepage": "",
+  "dependencies" : {
+    "coffee-script"   : "*",
+    "mincer"          : "*",
+    "autoprefixer"    : "*",
+    "jsdom"           : "*",
+    "mocha"           : "*",
+    "should"          : "*",
+    "browserify"      : "*",
+    "uglify-js"       : "*"
+  },
+  "scripts": {
+    "build": "browserify -s Components -c 'coffee -sc' source/components.coffee > bundle.js && uglifyjs bundle.js -o bundle.js",
+    "test": "mocha specs --compilers coffee:coffee-script -R list --require should",
+    "start": "nodemon app.coffee"
+  },
+  "engines": {
+    "node": ">=0.10"
+  }
+}

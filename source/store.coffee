@@ -1,38 +1,45 @@
+Utils = require './utils.coffee'
+
 class Store
   list   : -> console.warn Object.getPrototypeOf(@).constructor.name+'::list not implemented!'
   get    : -> console.warn Object.getPrototypeOf(@).constructor.name+'::get not implemented!'
   set    : -> console.warn Object.getPrototypeOf(@).constructor.name+'::set not implemented!'
   remove : -> console.warn Object.getPrototypeOf(@).constructor.name+'::remove not implemented!'
 
-  # Serialize component
+  # Deserialize component
   deserialize: (component)->
+    # Deserialize ports
     if component.ports
       for key,value of component.ports
         component.ports[key] = Function('value',value)
+
+    # Deserialize events
     if component.events
       for key,value of component.events
         component.events[key] = Function('e',value)
+
     component
 
+  # Serialize component
   serialize: (component)->
-    newComp = css: component.css
+    newComponent = {}
 
-    # Copy components
-    if component.components
-      newComp.components = component.components
+    # Copy 'static' properties
+    newComponent.css = component.css.toString() if component.css
+    newComponent.components = component.components if component.components
 
     # Serialize ports
     if component.ports
-      newComp.ports = {}
+      newComponent.ports = {}
       for key, value of component.ports
-        code = value.toString()
-        newComp.ports[key] = code.substring(code.indexOf("{")+1,code.lastIndexOf("}"))
+        newComponent.ports[key] = Utils.getBody value
 
     # Serialize Events
     if component.events
-      newComp.events = {}
+      newComponent.events = {}
       for key, value of component.events
-        code = value.toString()
-        newComp.events[key] = code.substring(code.indexOf("{")+1,code.lastIndexOf("}"))
+        newComponent.events[key] = Utils.getBody value
 
-    newComp
+    newComponent
+
+module.exports = Store

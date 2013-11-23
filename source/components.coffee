@@ -1,37 +1,5 @@
-#= require store/memory_store
-
-# Extensions / Polyfills
-# ----------------------
-Element::fireEvent = (type, data) ->
-  throw "No / Wrong type specified"  if typeof type isnt "string"
-  event = document.createEvent("HTMLEvents")
-  event.initEvent type, true, true
-  event[key] = data[key] for key of data
-  @dispatchEvent event
-  event
-
-Element::matchesSelector ?= ->
-  @matchesSelector or @mozMatchesSelector or @msMatchesSelector or @oMatchesSelector or @webkitMatchesSelector or (selector) ->
-    Array::slice.call(@parentNode or @document).querySelectorAll(selector).indexOf(@) isnt -1
-
-# Utility methods
-# ---------------
-Utils =
-  # Regexp for validating the tagname
-  # probably cheaper then try / catch - createElement
-  TAGNAME_REGEXP: /^[a-zA-Z_:][-a-zA-Z0-9_:.]+$/
-
-  # Async series minimal implementation
-  # because that's all we need right?
-  series: (methods, callback)->
-    return callback(null) unless methods.length
-    methods.shift() (error)->
-      return callback(error) if error
-      Utils.series methods, callback
-
-  validateTag: (tag)-> throw "Invalid type '#{tag}'!" unless @TAGNAME_REGEXP.test tag
-  each: (object, method)-> method(key,value) for key, value of object
-
+MemoryStore = require './stores/memory.coffee'
+Utils = require './utils.coffee'
 
 CREATE_REGEXP = /Components\.create\(["'](.*?)["']/
 
@@ -50,10 +18,12 @@ Components =
     Utils.validateTag(type)
     @store.get type, (base)=>
       # Create base element
-      component = document.createElement(type)
+      component = @document.createElement(type)
       # End here if there is no component
       # gracefull degradation...
       return callback component unless base
+
+      Utils.extendElement component
 
       # Setup data store
       component._data = {}
@@ -137,3 +107,5 @@ Components =
 
       # Start process
       Utils.series(series)
+
+module.exports = Components
