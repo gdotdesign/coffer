@@ -27,7 +27,7 @@ Utils =
 
   fireEvent: (type, data) ->
     throw "No / Wrong type specified"  if typeof type isnt "string"
-    event = document.createEvent("HTMLEvents")
+    event = @ownerDocument.createEvent("HTMLEvents")
     event.initEvent type, true, true
     event[key] = data[key] for key of data
     @dispatchEvent event

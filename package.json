@@ -11,10 +11,11 @@
     "mocha"           : "*",
     "should"          : "*",
     "browserify"      : "*",
-    "uglify-js"       : "*"
+    "uglify-js"       : "*",
+    "coffeeify"       : "*"
   },
   "scripts": {
-    "build": "browserify -s Components -c 'coffee -sc' source/components.coffee > bundle.js && uglifyjs bundle.js -o bundle.js",
+    "build": "browserify -t coffeeify tmp.js > bundle.js && uglifyjs bundle.js -o bundle.js",
     "test": "mocha specs --compilers coffee:coffee-script -R list --require should",
     "start": "nodemon app.coffee"
   },

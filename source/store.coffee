@@ -11,12 +11,12 @@ class Store
     # Deserialize ports
     if component.ports
       for key,value of component.ports
-        component.ports[key] = Function('value',value)
+        component.ports[key] = Function('value','create',value)
 
     # Deserialize events
     if component.events
       for key,value of component.events
-        component.events[key] = Function('e',value)
+        component.events[key] = Function('e','create',value)
 
     component
 

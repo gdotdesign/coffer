@@ -46,8 +46,10 @@ describe 'Store', ->
       obj = events: {a: 'return "hello";', b: 'return "bye";'}
       deserializedObj = @store.deserialize(obj)
       deserializedObj.events.a.should.be.instanceOf Function
+      deserializedObj.events.a.length.should.be.eql 2
       deserializedObj.events.a().should.be.exactly "hello"
       deserializedObj.events.b.should.be.instanceOf Function
+      deserializedObj.events.b.length.should.be.eql 2
       deserializedObj.events.b().should.be.exactly "bye"
 
   describe 'serialize', ->
