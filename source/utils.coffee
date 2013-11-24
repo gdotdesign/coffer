@@ -21,6 +21,22 @@ Utils =
   # @param [String] tag The tagname to validate
   validateTag: (tag)-> throw "Invalid type '#{tag}'!" unless @TAGNAME_REGEXP.test tag
 
+  validateComponent: (component)->
+    return false if typeof component.css isnt 'string'
+    return false if component.components and typeof component.components isnt 'object'
+    return false if component.events and typeof component.events isnt 'object'
+    return false if component.properties and typeof component.properties isnt 'object'
+    for comp in component.components?
+      return false unless @TAGNAME_REGEXP.test tag
+      return false if comp.position and typeof comp.position isnt 'number'
+    for id, method of component.events?
+      return if /[A-za-z][A-za-z0-9]/.test id
+      return unless method instanceof Function
+    for id, method of component.properties?
+      rreturn if /[A-za-z][A-za-z0-9]/.test id
+      return unless method instanceof Function
+    true
+
   # Runs method for every key / value
   #
   # @param [Object] object The object
