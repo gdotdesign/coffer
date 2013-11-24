@@ -26,7 +26,7 @@ Utils =
     element.matchesSelector = @matchesSelector.bind element
 
   fireEvent: (type, data) ->
-    throw "No / Wrong type specified"  if typeof type isnt "string"
+    throw "No / Wrong type specified" if typeof type isnt "string"
     event = @ownerDocument.createEvent("HTMLEvents")
     event.initEvent type, true, true
     event[key] = data[key] for key of data
@@ -35,6 +35,6 @@ Utils =
 
   matchesSelector: ->
     @matchesSelector or @mozMatchesSelector or @msMatchesSelector or @oMatchesSelector or @webkitMatchesSelector or (selector) ->
-      Array::slice.call(@parentNode or @document).querySelectorAll(selector).indexOf(@) isnt -1
+      Array::slice.call(@parentNode or @ownerDocument).querySelectorAll(selector).indexOf(@) isnt -1
 
 module.exports = Utils

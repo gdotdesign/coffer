@@ -1,25 +1,25 @@
 Store = require '../store.coffee'
 
 class MemoryStore extends Store
-  constructor: ->  @components = []
+  constructor: ->
+    @db = []
 
   list: (callback)->
-  	setTimeout =>
-  		callback? Object.keys(@components)
+    callback? Object.keys(@db)
 
   get: (name, callback)->
-    setTimeout =>
-      return callback(null) unless @components[name]
-      callback? @components[name]
+    throw "Not enough arguments" if arguments.length is 0
+    return callback(null) unless @db[name]
+    callback? @db[name]
 
   set: (name, component, callback)->
-    setTimeout =>
-      @components[name] = component
-      callback?()
+    throw "Not enough arguments" if arguments.length < 2
+    @db[name] = component
+    callback?()
 
   remove: (name, callback)->
-  	setTimeout =>
-  		delete @components[name]
-  		callback?()
+    throw "Not enough arguments" if arguments.length is 0
+    delete @db[name]
+    callback?()
 
 module.exports = MemoryStore

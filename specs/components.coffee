@@ -1,11 +1,8 @@
 Components = require '../source/components'
 
-if process
-  jsdom = require 'jsdom'
-  Components.document = jsdom.jsdom("<html></html>")
-  Element = jsdom.level(1, "core").Element
-else
-  Components.document = document
+jsdom = require 'jsdom'
+Components.document = jsdom.jsdom("<html></html>")
+Element = jsdom.level(1, "core").Element
 
 describe 'Components', ->
 
@@ -16,30 +13,36 @@ describe 'Components', ->
     it 'should call store register', (done)->
       data = {}
       Components.register 'test', data, ->
-        Components.store.components.should.have.property 'test'
-        Components.store.components.test.should.be.exactly data
-        delete Components.store.components.test
+        Components.store.db.should.have.property 'test'
+        Components.store.db.test.should.be.exactly data
+        delete Components.store.db.test
         done()
 
   describe 'create', ->
     before (done)->
-      Components.register 'btn', {
-        css: "btn { display: block }"
-      }, =>
-        Components.register 'login', {
+      Components.store.db =
+        test4: {}
+        test: {}
+        btn:
+          css: "btn { display: block }"
+        login:
           css: "login { background: linear-gradient(#fff,#000) }"
           components:
             Button: {type: 'btn', position: 1}
             Button2: {type: 'btn', position: 0}
           properties:
-            username: (value)->
+            username: (value,create)->
+              create('test4')
               @setAttribute 'username', value
           events:
-            ready: -> @_ready = true
-            test: -> @_test = true
-        }, =>
-          Components.create 'login', (@component)=>
-            done()
+            ready: (e,create)->
+              create('test')
+              @_ready = true
+            test: ->
+              @_test = true
+
+      Components.create 'login', (@component)=>
+        done()
 
     it 'should throw error for invalid tagname', ->
       (-> Components.create '$test').should.throw()
@@ -92,7 +95,52 @@ describe 'Components', ->
 
   describe 'style', ->
     it 'should throw error for invalid tagname', ->
-
-      Components.css 'login', (css)->
-
       (-> Components.style '$test').should.throw()
+
+    it 'should return object', (done)->
+      Components.style 'btn', (obj)->
+        obj.should.be.type 'object'
+        done()
+
+    it 'should return object that contains the element as a key', (done)->
+      Components.style 'btn', (obj)->
+        obj.btn.should.not.be.null
+        done()
+
+    it 'should return object that conatins the components css', (done)->
+      Components.style 'btn', (obj)->
+        obj.btn.should.be.exactly Components.store.db.btn.css
+        done()
+
+    it 'should return referenced components css also', (done)->
+      Components.style 'login', (obj)->
+        obj.btn.should.be.exactly Components.store.db.btn.css
+        done()
+
+  describe 'geather', ->
+    it 'should throw error for invalid tagname', ->
+      (-> Components.geather '$test').should.throw()
+
+    it 'should resolve simple component', (done)->
+      Components.geather 'btn', (components)->
+        components.btn.should.be.type 'object'
+        components.btn.should.be.exactly Components.store.db.btn
+        done()
+
+    it 'should resolve referenced component', (done)->
+      Components.geather 'login', (components)->
+        components.btn.should.be.type 'object'
+        components.btn.should.be.exactly Components.store.db.btn
+        done()
+
+    it 'should resolve referenced component from event', (done)->
+      Components.geather 'login', (components)->
+        components.test.should.be.type 'object'
+        components.test.should.be.exactly Components.store.db.test
+        done()
+
+    it 'should resolve referenced component from property', (done)->
+      Components.geather 'login', (components)->
+        components.test4.should.be.type 'object'
+        components.test4.should.be.exactly Components.store.db.test4
+        done()
