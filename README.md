@@ -3,6 +3,8 @@ Components
 
 [![Build Status](https://travis-ci.org/gdotdesign/components.png?branch=master)](https://travis-ci.org/gdotdesign/components)
 
+Trello board: https://trello.com/b/nVlowUCH/components
+
 # Usage
 
 ## Development
