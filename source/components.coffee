@@ -1,17 +1,28 @@
+Utils       = require './utils.coffee'
 MemoryStore = require './stores/memory.coffee'
-Utils = require './utils.coffee'
 
-# Core
-# ----
-# TODO: caching
+# The main entry point for the framework.
+#
+# @mixin
 Components =
   CREATE_REGEXP: /create\(["'](.*?)["']/g
   store: new MemoryStore
+
+  # Registers a component in the store
+  #
+  # @param [String] type The name of the component
+  # @param [Object] component The component to be registerd
+  # @param [Function] callback The callback to run
   register: (type, component, callback)->
     Utils.validateTag(type)
     @store.set type, component, callback
 
-  # Creates a components
+  # Creates a element from a component from the store
+  #
+  # @param [String] type The name of the component
+  # @param [Function] callback The callback to run
+  #
+  # @return [Element] Returns the created element (in the callback)
   create: (type, callback)->
     Utils.validateTag(type)
     @store.get type, (base)=>
@@ -77,7 +88,13 @@ Components =
       # Start process
       Utils.series(series)
 
-  # Resolve dependencies into one object
+  # Geathers all components that the
+  # given component uses
+  #
+  # @param [String] type The name of the component
+  # @param [Function] callback The callback to run
+  #
+  # @return [Object] All of the components geathered (in the callback)
   geather: (type, callback)->
     Utils.validateTag type
     @store.get type, (base)=>
@@ -115,6 +132,13 @@ Components =
       # Start process
       Utils.series series
 
+  # Geathers all of the css of the components that
+  # the given component uses.
+  #
+  # @param [String] type The name of the component
+  # @param [Function] callback The callback to run
+  #
+  # @return [Object] All of the css (in the callback)
   style: (type, callback)->
     @geather type, (components)->
       styles = {}
@@ -125,6 +149,12 @@ Components =
 
       callback? styles
 
+  # Creates css for the given component
+  #
+  # @param [String] type The name of the component
+  # @param [Function] callback The callback to run
+  #
+  # @return [String] The css for the component
   css: (type, callback)->
     @style type, (styles)->
       code = (for key, style of styles then style ).join("\n\n")

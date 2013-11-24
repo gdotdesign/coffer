@@ -7,6 +7,6 @@ describe 'MemoryStore', ->
 
   it 'should have a db property', ->
   	@store.should.have.property 'db'
-  	@store.db.should.be.instanceOf Array
+  	@store.db.should.be.instanceOf Object
 
   iStore.call @
