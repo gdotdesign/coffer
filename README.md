@@ -3,17 +3,18 @@ Components
 
 [![Build Status](https://travis-ci.org/gdotdesign/components.png?branch=master)](https://travis-ci.org/gdotdesign/components)
 
-Trello board: https://trello.com/b/nVlowUCH/components
+## Development
+Development goes in a Trello board: https://trello.com/b/nVlowUCH/components
 
 # Usage
 
 ## Development
-In development you can load your own components as well as components from the registry. But be aware of naming conflicts between the registry and your components.
+In development you can load your own components as well as components from the registry.
 
-### Register a component
+#### Register a component
     Components.register('tagname', component, callback)
 
-### Create a component
+#### Create a component
     Components.create('tagname', function(element){
         console.log(element);
     })
