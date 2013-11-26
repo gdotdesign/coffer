@@ -21,7 +21,7 @@ class MemoryStore extends Store
   #
   # @return [Object] The component (in the callback)
   get: (name, callback)->
-    throw "Not enough arguments" if arguments.length is 0
+    throw new Error "Not enough arguments" if arguments.length is 0
     return callback(null) unless @db[name]
     callback? @db[name]
 
@@ -31,7 +31,7 @@ class MemoryStore extends Store
   # @param [Object] component The component
   # @param [Function] callback The callback to run
   set: (name, component, callback)->
-    throw "Not enough arguments" if arguments.length < 2
+    throw new Error "Not enough arguments" if arguments.length < 2
     @db[name] = component
     callback?()
 
@@ -40,7 +40,7 @@ class MemoryStore extends Store
   # @param [String] name The name of the component
   # @param [Function] callback The callback to run
   remove: (name, callback)->
-    throw "Not enough arguments" if arguments.length is 0
+    throw new Error "Not enough arguments" if arguments.length is 0
     delete @db[name]
     callback?()
 

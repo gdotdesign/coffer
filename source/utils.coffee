@@ -19,22 +19,33 @@ Utils =
   # Validates the given tag for html tag name
   #
   # @param [String] tag The tagname to validate
-  validateTag: (tag)-> throw "Invalid type '#{tag}'!" unless @TAGNAME_REGEXP.test tag
+  validateTag: (tag)-> throw new Error "Invalid type '#{tag}'!" unless @TAGNAME_REGEXP.test tag
 
+  # Validates a component
+  # @param [Object] component The component to validate
+  #
+  # @return [Boolean] True if valid false if not
   validateComponent: (component)->
-    return false if typeof component.css isnt 'string'
-    return false if component.components and typeof component.components isnt 'object'
-    return false if component.events and typeof component.events isnt 'object'
-    return false if component.properties and typeof component.properties isnt 'object'
-    for comp in component.components?
-      return false unless @TAGNAME_REGEXP.test tag
-      return false if comp.position and typeof comp.position isnt 'number'
-    for id, method of component.events?
-      return if /[A-za-z][A-za-z0-9]/.test id
-      return unless method instanceof Function
-    for id, method of component.properties?
-      rreturn if /[A-za-z][A-za-z0-9]/.test id
-      return unless method instanceof Function
+    return false if component.css isnt undefined and typeof component.css isnt 'string'
+
+    return false if component.components is null or (component.components isnt undefined and typeof component.components isnt 'object')
+    return false if component.events     is null or (component.events     isnt undefined and typeof component.events     isnt 'object')
+    return false if component.properties is null or (component.properties isnt undefined and typeof component.properties isnt 'object')
+
+    for id, comp of component.components
+      return false unless /[A-za-z][A-za-z0-9]+/.test id
+      return false unless comp.type
+      return false if typeof comp.type isnt 'string'
+      return false unless @TAGNAME_REGEXP.test comp.type
+      return false if comp.position is null or (comp.position isnt undefined and typeof comp.position isnt 'number')
+
+    for id, method of component.events
+      return false unless method instanceof Function
+
+    for id, method of component.properties
+      return false unless /[A-za-z][A-za-z0-9]+/.test id
+      return false unless method instanceof Function
+
     true
 
   # Runs method for every key / value

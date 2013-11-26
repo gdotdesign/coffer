@@ -5,7 +5,7 @@ module.exports = ->
 
   describe 'get', ->
     it 'should throw error if there are not enough arguments', ->
-      (=> @store.get()).should.throw()
+      (=> @store.get()).should.throw('Not enough arguments')
 
     it 'should return null if there are no components', (done)->
       @store.get 'na', (args...)->
@@ -19,7 +19,7 @@ module.exports = ->
 
   describe 'set', ->
     it 'should throw error if there are not enough arguments', ->
-      (=> @store.set()).should.throw()
+      (=> @store.set()).should.throw('Not enough arguments')
 
     it 'should call the callback', (done)->
       @store.set 'asd', {}, (args...)=>
@@ -34,7 +34,7 @@ module.exports = ->
 
   describe 'remove', ->
     it 'should throw error if there are not enough arguments', ->
-      (=> @store.remove()).should.throw()
+      (=> @store.remove()).should.throw('Not enough arguments')
 
     it 'should remove the component', (done)->
       @store.remove 'test', =>
