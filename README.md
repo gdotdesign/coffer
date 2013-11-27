@@ -1,7 +1,7 @@
 Graphite
 ==========
 
-[![Build Status](https://travis-ci.org/gdotdesign/components.png?branch=master)](https://travis-ci.org/gdotdesign/components)
+[![Build Status](https://travis-ci.org/gdotdesign/graphite.png?branch=master)](https://travis-ci.org/gdotdesign/components)
 
 ## Development
 Development goes in a Trello board: https://trello.com/b/nVlowUCH/components
