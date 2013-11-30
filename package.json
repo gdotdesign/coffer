@@ -16,7 +16,8 @@
     "clean-css"       : "*",
     "codo"            : "*",
     "stylus"          : "*",
-    "ws"              : "*"
+    "ws"              : "*",
+    "redis"           : "*"
   },
   "scripts": {
     "docs": "codo source",

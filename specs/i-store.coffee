@@ -7,12 +7,12 @@ module.exports = ->
     it 'should throw error if there are not enough arguments', ->
       (=> @store.get()).should.throw('Not enough arguments')
 
-    it 'should return null if there are no components', (done)->
+    it "should return null the component doesn't exists", (done)->
       @store.get 'na', (args...)->
         args.should.include(null)
         done()
 
-    it 'should return the value passed for components', (done)->
+    it 'should return the component if it exists', (done)->
       @store.get 'test', (args...)->
         args.should.not.include(null)
         done()
@@ -36,7 +36,7 @@ module.exports = ->
     it 'should throw error if there are not enough arguments', ->
       (=> @store.remove()).should.throw('Not enough arguments')
 
-    it 'should remove the component', (done)->
+    it 'should remove the component if it exists', (done)->
       @store.remove 'test', =>
         @store.list (components)->
           components.should.not.include 'test'

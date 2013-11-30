@@ -2,7 +2,9 @@ WebSocketStore = require '../../source/stores/websocket'
 iStore = require '../i-store'
 
 class MockSocket
-  addEventListener: (type,@listener)->
+  addEventListener: (type,listener)->
+    return if type is 'open'
+    @listener = listener
     @store = {}
   send: (message)->
     message = JSON.parse message
@@ -25,6 +27,6 @@ class MockSocket
 
 describe 'WebSocketStore', ->
   before ->
-    @store = new WebSocketStore MockSocket, ''
+    @store = new WebSocketStore MockSocket, '', ->
 
   iStore.call @
