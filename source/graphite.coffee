@@ -1,5 +1,8 @@
 Components = require './components'
 
+module.exports.stores =
+  redis: require './stores/redis'
+  memory: require './stores/memory'
 module.exports.registry = require './registry/registry'
 module.exports.build = (store,tagname)->
 
