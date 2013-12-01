@@ -12,6 +12,7 @@ class WebSocketStore extends Store
   # @param [WebSocket] ws The WebSocket interface (WebSocket for browser / ws package for node)
   # @param [String] Path the path to connect to
   constructor: (ws,path,callback)->
+    throw new Error 'Must provide a callback!' unless callback instanceof Function
     @map = {}
     @socket = new ws(path)
     @socket.addEventListener 'message', @route

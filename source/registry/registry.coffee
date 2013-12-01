@@ -1,14 +1,14 @@
 {Server}   = require 'ws'
+Store      = require '../store'
 RedisStore = require '../stores/redis'
 
-module.exports = class Registry
+class Registry extends Store
   constructor: (callback)->
-    @store  = new RedisStore
-    @server = new Server {port: 23578}, ->
-      console.log "Graphite registry running on 23578..."
-      callback()
-
-    @server.on 'connection', @onConnection
+    @store = new RedisStore =>
+      @server = new Server {port: 23578}, ->
+        console.log "Graphite registry running on 23578..."
+        callback()
+      @server.on 'connection', @onConnection
 
   onConnection: (ws)=>
     ws.on 'message', (data)=> @route ws, JSON.parse data
@@ -19,7 +19,8 @@ module.exports = class Registry
       ws.send JSON.stringify {id: message.id, data: data}
 
   get: (data, callback)->
-    @store.get data.name, callback
+    @store.get data.name, (component)=>
+      callback if component is null then component else @serialize component
 
   set: (data, callback)->
     @store.set data.name, data.data, callback
@@ -29,3 +30,5 @@ module.exports = class Registry
 
   list: (data,callback)->
     @store.list callback
+
+module.exports = Registry

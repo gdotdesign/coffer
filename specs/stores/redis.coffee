@@ -1,8 +1,9 @@
 RedisStore = require '../../source/stores/redis'
-iStore = require '../i-store'
+iStore     = require '../interfaces/store'
 
 describe 'RedisStore', ->
-  before ->
-    @store = new RedisStore
+  before (done)->
+    @store = new RedisStore =>
+      @store.client.del @store.prefix, -> done()
 
   iStore.call @

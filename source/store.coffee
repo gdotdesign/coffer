@@ -28,10 +28,10 @@ class Store
   #
   # @return [Object] The deserialized component
   deserialize: (component)->
-    # Deserialize ports
-    if component.ports
-      for key,value of component.ports
-        component.ports[key] = Function('value','create',value)
+    # Deserialize properties
+    if component.properties
+      for key,value of component.properties
+        component.properties[key] = Function('value','create',value)
 
     # Deserialize events
     if component.events
@@ -52,17 +52,17 @@ class Store
     newComponent.css = component.css.toString() if component.css
     newComponent.components = component.components if component.components
 
-    # Serialize ports
-    if component.ports
-      newComponent.ports = {}
-      for key, value of component.ports
-        newComponent.ports[key] = Utils.getBody value
+    # Serialize properties
+    if component.properties
+      newComponent.properties = {}
+      for key, value of component.properties
+        newComponent.properties[key] = if value instanceof Function then Utils.getBody value else value
 
     # Serialize Events
     if component.events
       newComponent.events = {}
       for key, value of component.events
-        newComponent.events[key] = Utils.getBody value
+        newComponent.events[key] = if value instanceof Function then Utils.getBody value else value
 
     newComponent
 

@@ -1,12 +1,12 @@
+MemoryStore = require './stores/ memory.coffee'
 Utils       = require './utils.coffee'
-MemoryStore = require './stores/memory.coffee'
 
 # The main entry point for the framework.
 #
 # @mixin
 Components =
   CREATE_REGEXP: /create\(["'](.*?)["']/g
-  store: new MemoryStore
+  store: new MemoryStore ->
 
   # Registers a component in the store
   #

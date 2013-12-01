@@ -3,8 +3,11 @@ Store = require '../store.coffee'
 # Stores components in an object
 class MemoryStore extends Store
   # Constructor
-  constructor: ->
+  constructor: (callback)->
+    throw new Error 'Must provide a callback!' unless callback instanceof Function
     @db = {}
+    # This is needed for tests...
+    setTimeout callback
 
   # Lists component names contained in this store
   #

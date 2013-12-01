@@ -1,7 +1,20 @@
+Utils = require '../../source/utils'
+
 module.exports = ->
 
   before (done)->
-    @store.set 'test', {}, done
+    component =
+      css: 'test{}',
+      events:
+        test: ->
+      properties:
+        test: ->
+    @store.set 'test', component, done
+
+  describe 'constructor', ->
+    it 'should throw error if there isnt a callback', ->
+      constructor = Object.getPrototypeOf(@store).constructor
+      (=> new constructor).should.throw('Must provide a callback!')
 
   describe 'get', ->
     it 'should throw error if there are not enough arguments', ->
@@ -15,6 +28,14 @@ module.exports = ->
     it 'should return the component if it exists', (done)->
       @store.get 'test', (args...)->
         args.should.not.include(null)
+        done()
+
+    it 'should return valid component', (done)->
+      @store.get 'test', (component)->
+        Utils.validateComponent(component).should.be.true
+        component.css.should.be.exactly 'test{}'
+        component.events.test.should.be.instanceof Function
+        component.properties.test.should.be.instanceof Function
         done()
 
   describe 'set', ->

@@ -34,13 +34,13 @@ describe 'Store', ->
       deserializedObj = @store.deserialize(obj)
       obj.should.be.exactly deserializedObj
 
-    it 'should convert ports', ->
-      obj = ports: {a: 'return "hello";', b: 'return "bye";'}
+    it 'should convert properties', ->
+      obj = properties: {a: 'return "hello";', b: 'return "bye";'}
       deserializedObj = @store.deserialize(obj)
-      deserializedObj.ports.a.should.be.instanceOf Function
-      deserializedObj.ports.a().should.be.exactly "hello"
-      deserializedObj.ports.b.should.be.instanceOf Function
-      deserializedObj.ports.b().should.be.exactly "bye"
+      deserializedObj.properties.a.should.be.instanceOf Function
+      deserializedObj.properties.a().should.be.exactly "hello"
+      deserializedObj.properties.b.should.be.instanceOf Function
+      deserializedObj.properties.b().should.be.exactly "bye"
 
     it 'should convert events', ->
       obj = events: {a: 'return "hello";', b: 'return "bye";'}
@@ -75,11 +75,11 @@ describe 'Store', ->
       obj = {}
       ( => @store.serialize(obj)).should.not.throw()
 
-    it 'should convert ports', ->
-      obj = ports: {a: (-> console.log("hello")), b: (-> console.log("bye"))}
+    it 'should convert properties', ->
+      obj = properties: {a: (-> console.log("hello")), b: (-> console.log("bye"))}
       serializedObj = @store.serialize(obj)
-      serializedObj.ports.a.should.be.exactly 'return console.log("hello");'
-      serializedObj.ports.b.should.be.exactly 'return console.log("bye");'
+      serializedObj.properties.a.should.be.exactly 'return console.log("hello");'
+      serializedObj.properties.b.should.be.exactly 'return console.log("bye");'
 
     it 'should convert events', ->
       obj = events: {a: (-> console.log("hello")), b: (-> console.log("bye"))}
