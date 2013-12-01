@@ -4,7 +4,7 @@ MemoryStore     = require '../../source/stores/memory'
 iStore        = require '../interfaces/store'
 WebSocket       = require 'ws'
 
-describe 'Redis / Registry / WebSocketStore (Integration)', ->
+describe 'Memory / Registry / WebSocketStore (Integration)', ->
   before (done)->
     store = new MemoryStore =>
     @registry = new Registry {store: store, port: 23578}, =>
