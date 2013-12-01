@@ -1,4 +1,4 @@
-MemoryStore = require './stores/ memory.coffee'
+MemoryStore = require './stores/memory.coffee'
 Utils       = require './utils.coffee'
 
 # The main entry point for the framework.
