@@ -1,5 +1,6 @@
 Components = require './components'
 
+module.exports.registry = require './registry/registry'
 module.exports.build = (store,tagname)->
 
   Components.store = store
