@@ -1,8 +1,13 @@
 {
-  "name": "",
-  "version": "",
-  "description": "",
-  "homepage": "",
+  "name": "graphites",
+  "version": "0.0.1",
+  "description": "Integrated Components",
+  "homepage": "https://github.com/gdotdesign/graphite",
+  "main": "./source/graphite",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/gdotdesign/graphite.git"
+  },
   "dependencies" : {
     "coffee-script"   : "*",
     "mincer"          : "*",
@@ -18,14 +23,16 @@
     "stylus"          : "*",
     "ws"              : "*",
     "redis"           : "*",
-    "coffee-coverage" : "*"
+    "coffee-coverage" : "*",
+    "nconf"           : "*"
   },
   "scripts": {
+    "cli": "coffee source/graphite.coffee",
     "docs": "codo source",
-    "build": "browserify -t coffeeify tmp.js > bundle.js && uglifyjs bundle.js -o bundle.js",
+    "build": "coffee build.coffee",
     "test": "mocha specs/*.coffee specs/**/*.coffee -b --compilers coffee:coffee-script -R list --require should",
     "start": "nodemon app.coffee",
-    "cover": "mocha --require lib/coverage-compiler.js should --reporter html-cov specs/*.coffee specs/**/*.coffee > test2.html"
+    "cover": "mocha --require lib/coverage-compiler.js should --reporter html-cov specs/*.coffee specs/**/*.coffee > coverage.html"
   },
   "engines": {
     "node": ">=0.10"
