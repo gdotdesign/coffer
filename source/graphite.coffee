@@ -1,5 +1,3 @@
-Components = require './components'
-
 module.exports.stores =
   redis: require './stores/redis'
   memory: require './stores/memory'
@@ -36,16 +34,23 @@ module.exports.buildClient = (callback)->
     FS.unlink './tmp.js'
     callback result.code
 
-# Builds a browser bundle
-#
-# @param [Store] store The store from which to build
-# @param [String] tagname The name of the component to build
-module.exports.build = (store,tagname,callback)->
+module.exports.buildCSS = (store,tagname,callback)->
 
+  Autoprefixer = require 'autoprefixer'
+  CleanCSS     = require 'clean-css'
+  Components = require './components'
   Components.store = store
 
-  CleanCSS     = require 'clean-css'
-  Autoprefixer = require 'autoprefixer'
+  Components.css tagname, (code)->
+    css = Autoprefixer.compile(code)
+    css = new CleanCSS().minify(code)
+    callback css
+
+module.exports.buildJS = (store,tagname,callback)->
+
+  Components = require './components'
+  Components.store = store
+
   browserify   = require 'browserify'
   coffeeify    = require 'coffeeify'
   UglifyJS     = require 'uglify-js'
@@ -72,7 +77,6 @@ module.exports.build = (store,tagname,callback)->
       document.body.appendChild(element)
     })
     """
-
     FS.writeFileSync("#{__dirname}/tmp.js", code, 'utf-8' )
 
     console.log "Creating browser bundle..."
@@ -84,9 +88,4 @@ module.exports.build = (store,tagname,callback)->
       result = UglifyJS.minify(src, {fromString: true})
       FS.unlink "#{__dirname}/tmp.js"
 
-      console.log "Creating css..."
-      Components.css tagname, (code)->
-        css = Autoprefixer.compile(code)
-        css = new CleanCSS().minify(code)
-        callback {js: result.code, css: css}
-        console.log "Done!"
+      callback result.code
