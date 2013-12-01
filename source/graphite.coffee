@@ -4,6 +4,7 @@ module.exports.stores =
   redis: require './stores/redis'
   memory: require './stores/memory'
   firebase: require './stores/firebase'
+  file: require './stores/file'
 
 module.exports.registry = require './registry/registry'
 
@@ -14,8 +15,8 @@ module.exports.buildClient = (callback)->
   UglifyJS     = require 'uglify-js'
 
   code = """
-    WebSocketStore = require('./source/stores/websocket.coffee')
-    Components = require('./source/components.coffee')
+    WebSocketStore = require('#{__dirname}/stores/memory.coffee')
+    Components = require('#{__dirname}/components.coffee')
     Components.document = document
     Components.store = new WebSocketStore(WebSocket, 'ws://graphite-registry.herokuapp.com/',function(){
       event = document.createEvent("HTMLEvents")
@@ -39,7 +40,7 @@ module.exports.buildClient = (callback)->
 #
 # @param [Store] store The store from which to build
 # @param [String] tagname The name of the component to build
-module.exports.build = (store,tagname)->
+module.exports.build = (store,tagname,callback)->
 
   Components.store = store
 
@@ -64,7 +65,7 @@ module.exports.build = (store,tagname)->
       ret.push "#{type}: {#{cret.join(",")}}"
 
     code = """
-    Components = require('./source/components.coffee')
+    Components = require('#{__dirname}/components.coffee')
     Components.document = document
     Components.store.db = {#{ret.join(",\n")}}
     Components.create('#{tagname}',function(element){
@@ -72,20 +73,20 @@ module.exports.build = (store,tagname)->
     })
     """
 
-    FS.writeFileSync('./tmp.js', code, 'utf-8' )
+    FS.writeFileSync("#{__dirname}/tmp.js", code, 'utf-8' )
 
     console.log "Creating browser bundle..."
     b = browserify()
-    b.add('./tmp.js')
+    b.add("#{__dirname}/tmp.js")
     b.transform coffeeify
     b.bundle {}, (err,src)->
       console.log "Compressing..."
       result = UglifyJS.minify(src, {fromString: true})
-      FS.unlink './tmp.js'
+      FS.unlink "#{__dirname}/tmp.js"
 
       console.log "Creating css..."
       Components.css tagname, (code)->
         css = Autoprefixer.compile(code)
         css = new CleanCSS().minify(code)
+        callback {js: result.code, css: css}
         console.log "Done!"
-        store.close()
