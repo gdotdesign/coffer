@@ -1,12 +1,20 @@
 Store = require '../store.coffee'
 Redis = require 'redis'
+URL   = require('url')
 
 # Stores components in redis
 class RedisStore extends Store
-  constructor: (callback)->
+  constructor: (url,callback)->
     throw new Error 'Must provide a callback!' unless callback instanceof Function
     @prefix = 'graphite'
-    @client = Redis.createClient()
+
+    redisURL = URL.parse(url)
+    console.log redisURL
+
+    @client = Redis.createClient(redisURL.port, redisURL.hostname, {no_ready_check: true})
+    if redisURL.auth
+      @client.auth(redisURL.auth.split(":")[1])
+
     @client.on 'ready', callback
 
   get: (name, callback)->

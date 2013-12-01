@@ -3,8 +3,8 @@ Store      = require '../store'
 RedisStore = require '../stores/redis'
 
 class Registry extends Store
-  constructor: (port = 23578, callback)->
-    @store = new RedisStore =>
+  constructor: (url, port, callback)->
+    @store = new RedisStore url, =>
       @server = new Server {port: port}, ->
         callback()
       @server.on 'connection', @onConnection
