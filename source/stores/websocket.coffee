@@ -2,6 +2,7 @@ Store = require '../store.coffee'
 
 # WebSocket Store Adapter
 class WebSocketStore extends Store
+
   # Generated unique identifier for transactions
   #
   # @return [String] The uid
@@ -11,12 +12,16 @@ class WebSocketStore extends Store
   #
   # @param [WebSocket] ws The WebSocket interface (WebSocket for browser / ws package for node)
   # @param [String] Path the path to connect to
+  # @param [Function] callback The callback to call when ready
   constructor: (ws,path,callback)->
     throw new Error 'Must provide a callback!' unless callback instanceof Function
     @map = {}
     @socket = new ws(path)
     @socket.addEventListener 'message', @route
     @socket.addEventListener 'open', -> callback()
+
+  # Closes the websocket connection
+  close: -> @socket.close()
 
   # Handles massages
   #

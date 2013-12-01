@@ -2,7 +2,10 @@ Store = require '../store.coffee'
 
 # Stores components in an object
 class MemoryStore extends Store
+
   # Constructor
+  #
+  # @param [Function] callback The callback to call when ready
   constructor: (callback)->
     throw new Error 'Must provide a callback!' unless callback instanceof Function
     @db = {}
@@ -17,7 +20,7 @@ class MemoryStore extends Store
   list: (callback)->
     callback? Object.keys(@db)
 
-  # Retries a component from this store
+  # Retrieves a component from this store
   #
   # @param [String] name The name of the component
   # @param [Function] callback The callback to run

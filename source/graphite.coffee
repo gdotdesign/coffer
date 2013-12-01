@@ -4,7 +4,13 @@ module.exports.stores =
   redis: require './stores/redis'
   memory: require './stores/memory'
   firebase: require './stores/firebase'
+
 module.exports.registry = require './registry/registry'
+
+# Builds a browser bundle
+#
+# @param [Store] store The store from which to build
+# @param [String] tagname The name of the component to build
 module.exports.build = (store,tagname)->
 
   Components.store = store
@@ -40,7 +46,7 @@ module.exports.build = (store,tagname)->
 
     FS.writeFileSync('./tmp.js', code, 'utf-8' )
 
-    console.log "Createing browser bundle..."
+    console.log "Creating browser bundle..."
     b = browserify()
     b.add('./tmp.js')
     b.transform coffeeify
@@ -54,4 +60,4 @@ module.exports.build = (store,tagname)->
         css = Autoprefixer.compile(code)
         css = new CleanCSS().minify(code)
         console.log "Done!"
-
+        store.close()

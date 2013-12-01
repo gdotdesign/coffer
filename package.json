@@ -27,12 +27,10 @@
     "nconf"           : "*"
   },
   "scripts": {
-    "cli": "coffee source/graphite.coffee",
-    "docs": "codo source",
+    "doc": "codo source",
     "build": "coffee build.coffee",
     "test": "mocha specs/*.coffee specs/**/*.coffee -b --compilers coffee:coffee-script -R list --require should",
-    "start": "nodemon app.coffee",
-    "cover": "mocha --require lib/coverage-compiler.js should --reporter html-cov specs/*.coffee specs/**/*.coffee > coverage.html"
+    "coverage": "mocha --require lib/coverage-compiler.js should --reporter html-cov specs/*.coffee specs/**/*.coffee > coverage.html"
   },
   "engines": {
     "node": ">=0.10"
