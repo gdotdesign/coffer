@@ -2,6 +2,8 @@ WebSocketStore = require './source/stores/websocket'
 graphite = require './source/graphite'
 WebSocket       = require 'ws'
 
+graphite.buildClient()
+
 store = new WebSocketStore WebSocket, "ws://graphite-registry.herokuapp.com/", ->
   store.set 'test', {
     css: """

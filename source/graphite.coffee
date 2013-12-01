@@ -7,6 +7,35 @@ module.exports.stores =
 
 module.exports.registry = require './registry/registry'
 
+module.exports.buildClient = ->
+  browserify   = require 'browserify'
+  FS           = require 'fs'
+  coffeeify    = require 'coffeeify'
+  UglifyJS     = require 'uglify-js'
+
+  code = """
+    WebSocketStore = require('./source/stores/websocket.coffee')
+    Components = require('./source/components.coffee')
+    Components.document = document
+    Components.store = new WebSocketStore(WebSocket, 'ws://graphite-registry.herokuapp.com/',function(){
+      event = document.createEvent("HTMLEvents")
+      event.initEvent('components-ready', true, true)
+      window.dispatchEvent(event)
+    })
+    module.exports = Components
+  """
+
+  FS.writeFileSync('./tmp.js', code, 'utf-8' )
+
+  b = browserify()
+  b.add('./tmp.js')
+  b.transform coffeeify
+  b.bundle {standalone: 'Components'}, (err,src)->
+    result = UglifyJS.minify(src, {fromString: true})
+    FS.unlink './tmp.js'
+    console.log result.code
+    process.exit()
+
 # Builds a browser bundle
 #
 # @param [Store] store The store from which to build
@@ -15,12 +44,12 @@ module.exports.build = (store,tagname)->
 
   Components.store = store
 
-  FS           = require 'fs'
   CleanCSS     = require 'clean-css'
   Autoprefixer = require 'autoprefixer'
   browserify   = require 'browserify'
   coffeeify    = require 'coffeeify'
   UglifyJS     = require 'uglify-js'
+  FS           = require 'fs'
 
   console.log "Resoving component tree..."
   Components.geather tagname, (components)->
@@ -36,7 +65,7 @@ module.exports.build = (store,tagname)->
       ret.push "#{type}: {#{cret.join(",")}}"
 
     code = """
-    window.Components = require('./source/components.coffee')
+    Components = require('./source/components.coffee')
     Components.document = document
     Components.store.db = {#{ret.join(",\n")}}
     Components.create('#{tagname}',function(element){
