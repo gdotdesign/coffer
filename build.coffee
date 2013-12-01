@@ -1,7 +1,8 @@
-RedisStore = require './source/stores/redis'
+WebSocketStore = require './source/stores/websocket'
 graphite = require './source/graphite'
+WebSocket       = require 'ws'
 
-store = new RedisStore ->
+store = new WebSocketStore WebSocket, "ws://graphite-registry.herokuapp.com/", ->
   store.set 'test', {
     css: """
 

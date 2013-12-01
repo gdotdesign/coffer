@@ -9,8 +9,6 @@ class RedisStore extends Store
     @prefix = 'graphite'
 
     redisURL = URL.parse(url)
-    console.log redisURL
-
     @client = Redis.createClient(redisURL.port, redisURL.hostname, {no_ready_check: true})
     if redisURL.auth
       @client.auth(redisURL.auth.split(":")[1])

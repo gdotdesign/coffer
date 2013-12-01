@@ -1,12 +1,16 @@
 Registry        = require '../../source/registry/registry'
 WebSocketStore  = require '../../source/stores/websocket'
-iStore 		    = require '../interfaces/store'
+RedisStore      = require '../../source/stores/redis'
+iStore          = require '../interfaces/store'
 WebSocket       = require 'ws'
 
-describe 'Registry / WebSocketStore (Integration)', ->
+describe 'Redis / Registry / WebSocketStore (Integration)', ->
   before (done)->
-    @registry = new Registry 'http://localhost:6379', 23578, =>
+    store = new RedisStore 'http://localhost:6379', =>
+    @registry = new Registry {store: store, port: 23578}, =>
       @store = new WebSocketStore WebSocket, "ws://localhost:23578", =>
         @registry.store.client.del @registry.store.prefix, -> done()
+
+  after -> @registry.close()
 
   iStore.call @
