@@ -54,7 +54,6 @@ class WebSocketStore extends Store
   # @return [Object] The component (in the callback)
   get: (name,callback)->
     throw new Error "Not enough arguments" if arguments.length is 0
-    return callback(null) if name is null
     @query 'get', { name: name }, (data)=>
       return callback(null) unless data
       callback @deserialize data

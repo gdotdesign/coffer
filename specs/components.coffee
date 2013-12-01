@@ -1,5 +1,5 @@
 Components = require '../source/components'
-
+should = require 'should'
 jsdom = require 'jsdom'
 Components.document = jsdom.jsdom("<html></html>")
 Element = jsdom.level(1, "core").Element
@@ -40,6 +40,8 @@ describe 'Components', ->
               @_ready = true
             test: ->
               @_test = true
+            'test2:*': ->
+              @_test2 = true
 
       Components.create 'login', (@component)=>
         done()
@@ -64,9 +66,10 @@ describe 'Components', ->
       desc.should.have.property 'enumerable'
       desc.enumerable.should.be.true
 
-    it 'should call provided function when setting port', ->
+    it 'should call provided function when setting property', ->
       @component.username = "gdot"
       @component.getAttribute('username').should.be.exactly 'gdot'
+      @component.username.should.be.exactly 'gdot'
 
     it 'should set data store entriy for property', ->
       @component.username = "gdot1"
@@ -82,6 +85,12 @@ describe 'Components', ->
         @component.should.have.property "_test"
         done()
 
+    it 'should handle delegated events', (done)->
+      @component.Button.fireEvent 'test2'
+      setTimeout =>
+        @component.should.have.property "_test2"
+        done()
+
     it 'should create sub components', ->
       @component.should.have.property 'Button'
       @component.Button.tagName.should.be.eql 'BTN'
@@ -92,6 +101,16 @@ describe 'Components', ->
 
     it 'should create data store', ->
       @component.should.have.property '_data'
+
+  describe 'css', ->
+    it 'should throw error for invalid tagname', ->
+      (-> Components.css '$test').should.throw()
+
+    it 'should return with css of all components', (done)->
+      Components.css 'login', (css)->
+        css.indexOf(Components.store.db.btn.css).should.not.be.exactly -1
+        css.indexOf(Components.store.db.login.css).should.not.be.exactly -1
+        done()
 
   describe 'style', ->
     it 'should throw error for invalid tagname', ->

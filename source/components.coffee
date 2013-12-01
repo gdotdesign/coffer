@@ -75,9 +75,9 @@ Components =
             component.addEventListener event, (e)->
               code.call(component,e,create)
           else
-            component.addEventListener event, (e)->
+            component.addEventListener event, ((e)->
               code.call(component,e,create) if e.target.matchesSelector(selector)
-            , true
+            ), true
 
         # Ready event
         component.fireEvent 'ready'

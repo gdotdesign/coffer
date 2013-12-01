@@ -17,13 +17,15 @@
     "codo"            : "*",
     "stylus"          : "*",
     "ws"              : "*",
-    "redis"           : "*"
+    "redis"           : "*",
+    "coffee-coverage" : "*"
   },
   "scripts": {
     "docs": "codo source",
     "build": "browserify -t coffeeify tmp.js > bundle.js && uglifyjs bundle.js -o bundle.js",
     "test": "mocha specs/*.coffee specs/**/*.coffee -b --compilers coffee:coffee-script -R list --require should",
-    "start": "nodemon app.coffee"
+    "start": "nodemon app.coffee",
+    "cover": "mocha --require lib/coverage-compiler.js should --reporter html-cov specs/*.coffee specs/**/*.coffee > test2.html"
   },
   "engines": {
     "node": ">=0.10"

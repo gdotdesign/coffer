@@ -1,4 +1,3 @@
-console.log __dirname
 Registry        = require '../../source/registry/registry'
 WebSocketStore  = require '../../source/stores/websocket'
 iStore 		    = require '../interfaces/store'

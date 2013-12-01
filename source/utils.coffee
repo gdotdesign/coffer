@@ -87,6 +87,6 @@ Utils =
   # MatchesSelector Polyfill
   matchesSelector: ->
     @mozMatchesSelector or @msMatchesSelector or @oMatchesSelector or @webkitMatchesSelector or (selector) ->
-      Array::slice.call(@parentNode or @ownerDocument).querySelectorAll(selector).indexOf(@) isnt -1
+      Array::slice.call((@parentNode or @ownerDocument).querySelectorAll(selector)).indexOf(@) isnt -1
 
 module.exports = Utils

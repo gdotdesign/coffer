@@ -6,7 +6,6 @@ class Registry extends Store
   constructor: (callback)->
     @store = new RedisStore =>
       @server = new Server {port: 23578}, ->
-        console.log "Graphite registry running on 23578..."
         callback()
       @server.on 'connection', @onConnection
 

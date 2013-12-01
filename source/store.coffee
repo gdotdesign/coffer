@@ -11,16 +11,20 @@ Utils = require './utils.coffee'
 #
 class Store
   # Placeholder for the list method
-  list: -> console.warn Object.getPrototypeOf(@).constructor.name+'::list not implemented!'
+  list: ->
+    throw new Error Object.getPrototypeOf(@).constructor.name+'::list not implemented!'
 
   # Placeholder for the get method
-  get: -> console.warn Object.getPrototypeOf(@).constructor.name+'::get not implemented!'
+  get: ->
+    throw new Error Object.getPrototypeOf(@).constructor.name+'::get not implemented!'
 
   # Placeholder for the set method
-  set: -> console.warn Object.getPrototypeOf(@).constructor.name+'::set not implemented!'
+  set: ->
+    throw new Error Object.getPrototypeOf(@).constructor.name+'::set not implemented!'
 
   # Placeholder for the remove methods
-  remove: -> console.warn Object.getPrototypeOf(@).constructor.name+'::remove not implemented!'
+  remove: ->
+    throw new Error Object.getPrototypeOf(@).constructor.name+'::remove not implemented!'
 
   # Deserialize component
   #

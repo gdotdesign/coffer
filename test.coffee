@@ -1,2 +1,3 @@
 server = require './source/registry/registry'
-new server
+new server ->
+  console.log "Graphite registry running on 23578..."

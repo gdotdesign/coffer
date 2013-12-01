@@ -7,18 +7,22 @@ describe 'Store', ->
   it 'should have a list method', ->
     @store.should.have.property 'list'
     @store.list.should.be.an.instanceOf Function
+    (=> @store.list()).should.throw("Store::list not implemented!")
 
   it 'should have a get method', ->
     @store.should.have.property 'get'
     @store.get.should.be.an.instanceOf Function
+    (=> @store.get()).should.throw("Store::get not implemented!")
 
   it 'should have a set method', ->
     @store.should.have.property 'set'
     @store.set.should.be.an.instanceOf Function
+    (=> @store.set()).should.throw("Store::set not implemented!")
 
   it 'should have a remove method', ->
     @store.should.have.property 'remove'
     @store.remove.should.be.an.instanceOf Function
+    (=> @store.remove()).should.throw("Store::remove not implemented!")
 
   it 'should have serialize method', ->
     @store.should.have.property 'serialize'
@@ -76,13 +80,13 @@ describe 'Store', ->
       ( => @store.serialize(obj)).should.not.throw()
 
     it 'should convert properties', ->
-      obj = properties: {a: (-> console.log("hello")), b: (-> console.log("bye"))}
+      obj = properties: {a: (-> console.log('hello')), b: (-> console.log('bye'))}
       serializedObj = @store.serialize(obj)
-      serializedObj.properties.a.should.be.exactly 'return console.log("hello");'
-      serializedObj.properties.b.should.be.exactly 'return console.log("bye");'
+      serializedObj.properties.a.indexOf("return console.log('hello');").should.not.be.exactly -1
+      serializedObj.properties.b.indexOf("return console.log('bye');").should.not.be.exactly -1
 
     it 'should convert events', ->
-      obj = events: {a: (-> console.log("hello")), b: (-> console.log("bye"))}
+      obj = events: {a: (-> console.log('hello')), b: (-> console.log('bye'))}
       serializedObj = @store.serialize(obj)
-      serializedObj.events.a.should.be.exactly 'return console.log("hello");'
-      serializedObj.events.b.should.be.exactly 'return console.log("bye");'
+      serializedObj.events.a.indexOf("return console.log('hello');").should.not.be.exactly -1
+      serializedObj.events.b.indexOf("return console.log('bye');").should.not.be.exactly -1

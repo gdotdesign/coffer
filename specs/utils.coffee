@@ -1,6 +1,17 @@
 Utils = require '../source/utils'
+jsdom = require 'jsdom'
+document = jsdom.jsdom("<html><body></body></html>")
 
 describe 'Utils', ->
+
+  describe 'matchesSelector', ->
+    it 'should work as matchesSelector should', ->
+      el = document.createElement('div')
+      document.body.appendChild el
+      el.matchesSelector = Utils.matchesSelector.call el
+      el.matchesSelector('span').should.be.false
+      el.matchesSelector('div').should.be.true
+
   describe 'validateComponent', ->
 
     describe 'css', ->
@@ -76,7 +87,7 @@ describe 'Utils', ->
         Utils.validateComponent({properties: {'test': null}}).should.be.false
         Utils.validateComponent({properties: {'test': 0}}).should.be.false
 
-       it 'should return true for valid property', ->
+      it 'should return true for valid property', ->
         Utils.validateComponent({properties: {'test': ->}}).should.be.true
 
 
