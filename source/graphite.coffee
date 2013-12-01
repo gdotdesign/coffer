@@ -7,7 +7,7 @@ module.exports.stores =
 
 module.exports.registry = require './registry/registry'
 
-module.exports.buildClient = ->
+module.exports.buildClient = (callback)->
   browserify   = require 'browserify'
   FS           = require 'fs'
   coffeeify    = require 'coffeeify'
@@ -33,8 +33,7 @@ module.exports.buildClient = ->
   b.bundle {standalone: 'Components'}, (err,src)->
     result = UglifyJS.minify(src, {fromString: true})
     FS.unlink './tmp.js'
-    console.log result.code
-    process.exit()
+    callback result.code
 
 # Builds a browser bundle
 #
