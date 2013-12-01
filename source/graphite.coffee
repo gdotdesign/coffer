@@ -15,7 +15,7 @@ module.exports.buildClient = (callback)->
   UglifyJS     = require 'uglify-js'
 
   code = """
-    WebSocketStore = require('#{__dirname}/stores/memory.coffee')
+    WebSocketStore = require('#{__dirname}/stores/websocket.coffee')
     Components = require('#{__dirname}/components.coffee')
     Components.document = document
     Components.store = new WebSocketStore(WebSocket, 'ws://graphite-registry.herokuapp.com/',function(){
@@ -59,16 +59,16 @@ module.exports.build = (store,tagname,callback)->
     for type, comp of components
       cret = ["components: #{JSON.stringify(comp.components) or '{}'}"]
       cret.push "events: {"+(for key, method of comp.events
-        "#{key}: #{method.toString()}").join(",")+"}"
+        "'#{key}': #{method.toString()}").join(",")+"}"
       cret.push "properties: {"+(for key, method of comp.properties
-        "#{key}: #{method.toString()}").join(",")+"}"
-      ret.push "#{type}: {#{cret.join(",")}}"
+        "'#{key}': #{method.toString()}").join(",")+"}"
+      ret.push "'#{type}': {#{cret.join(",")}}"
 
     code = """
-    Components = require('#{__dirname}/components.coffee')
-    Components.document = document
-    Components.store.db = {#{ret.join(",\n")}}
-    Components.create('#{tagname}',function(element){
+    var _components = require('#{__dirname}/components.coffee')
+    _components.document = document
+    _components.store.db = {#{ret.join(",\n")}}
+    _components.create('#{tagname}',function(element){
       document.body.appendChild(element)
     })
     """
