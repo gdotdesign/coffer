@@ -1,26 +1,39 @@
-Graphite
-==========
+# Coffer [![Build Status](https://travis-ci.org/gdotdesign/graphite.png?branch=master)](https://travis-ci.org/gdotdesign/graphite)
 
-[![Build Status](https://travis-ci.org/gdotdesign/graphite.png?branch=master)](https://travis-ci.org/gdotdesign/components)
+Coffer is a components framework, designed from the ground up to be modular, extensible and easy to use.
 
-## Development
-Development goes in a Trello board: https://trello.com/b/nVlowUCH/components
+## A Component
 
-# Usage
+*TODO*
 
-## Development
-In development you can load your own components as well as components from the registry.
+## Usage (development)
 
-#### Register a component
-    Components.register('tagname', component, callback)
+### Basic usage
+Build / Download the Coffer client and load it into your application
+
+```html
+<script type="text/javascript" src="coffer-client.js"></script>
+```
+
+This will create `Coffer` global variable that can you use the create a component, it will connect to the registry and emit `components-ready` event.
+
+#### Registering a local component
+Just call `Coffer.register` with the name and contents of the component, the callback will be run when the component is registered.
+```JavaScript
+Coffer.register('tagname', {css:'', events: ..., properties: ...}), callback)
+````
 
 #### Create a component
-    Components.create('tagname', function(element){
-        console.log(element);
-    })
+The example below will create a local component if it exsists otherwise it will retrieve the component from the registry and create it, if it can't find it, it will create the elment nonetheless but it will be empty and won't contain any events, properties or CSS.
+```JavaScript
+Coffer.create('tagname', function(element){
+  console.log(element);
+})
+```
 
-# Production / Build
+## Production / Build
 
-    bin/build tagname
-
-This will build the tagname (component / application) into 2 sperate files (JS/CSS)
+*TODO*
+    
+## Framework Development
+Development goes in a Trello board: https://trello.com/b/nVlowUCH/components
