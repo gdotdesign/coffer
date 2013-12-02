@@ -7,6 +7,7 @@ class FirebaseStore extends Store
   #
   # @param [Firebase] Firebase The Firebase constructor
   # @param [Object] options The options for this instance
+  # @param [Function] callback The callback to call when ready
   constructor: (Firebase, options, callback)->
     throw new Error 'Must provide a callback!' unless callback instanceof Function
 

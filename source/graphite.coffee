@@ -1,16 +1,21 @@
-module.exports.stores =
-  redis: require './stores/redis'
-  memory: require './stores/memory'
-  firebase: require './stores/firebase'
-  file: require './stores/file'
+module.exports.Stores =
+  Redis: require './stores/redis'
+  Memory: require './stores/memory'
+  Firebase: require './stores/firebase'
+  File: require './stores/file'
+  WebSocket: require './stores/websocket'
 
 module.exports.registry = require './registry/registry'
 
+# Builds browser client
+#
+# @param [Function] callback The callback to call when finished
+# @return [String] The minified compiled code
 module.exports.buildClient = (callback)->
   browserify   = require 'browserify'
-  FS           = require 'fs'
   coffeeify    = require 'coffeeify'
   UglifyJS     = require 'uglify-js'
+  Fs           = require 'fs'
 
   code = """
     WebSocketStore = require('#{__dirname}/stores/websocket.coffee')
@@ -24,43 +29,54 @@ module.exports.buildClient = (callback)->
     module.exports = Components
   """
 
-  FS.writeFileSync('./tmp.js', code, 'utf-8' )
+  Fs.writeFileSync('./tmp.js', code, 'utf-8' )
 
   b = browserify()
   b.add('./tmp.js')
   b.transform coffeeify
   b.bundle {standalone: 'Components'}, (err,src)->
     result = UglifyJS.minify(src, {fromString: true})
-    FS.unlink './tmp.js'
+    Fs.unlink './tmp.js'
     callback result.code
 
-module.exports.buildCSS = (store,tagname,callback)->
+# Build CSS for a given component
+#
+# @param [Store] store The store that contains the component
+# @param [String] name The name of the component
+# @param [Function] callback The callback to call when finished
+#
+# @return [String] The generated CSS
+module.exports.buildCSS = (store,name,callback)->
 
   Autoprefixer = require 'autoprefixer'
   CleanCSS     = require 'clean-css'
-  Components = require './components'
+  Components   = require './components'
+
   Components.store = store
 
-  Components.css tagname, (code)->
-    css = Autoprefixer.compile(code)
-    css = new CleanCSS().minify(code)
-    callback css
+  Components.css name, (code)->
+    callback new CleanCSS().minify(Autoprefixer.compile(code))
 
-module.exports.buildJS = (store,tagname,callback)->
+# Build JavaScript for a given component
+#
+# @param [Store] store The store that contains the component
+# @param [String] name The name of the component
+# @param [Function] callback The callback to call when finished
+#
+# @return [String] The generated JavaScript
+module.exports.buildJS = (store,name,callback)->
 
   Components = require './components'
+  browserify = require 'browserify'
+  coffeeify  = require 'coffeeify'
+  UglifyJS   = require 'uglify-js'
+  FS         = require 'fs'
+
   Components.store = store
 
-  browserify   = require 'browserify'
-  coffeeify    = require 'coffeeify'
-  UglifyJS     = require 'uglify-js'
-  FS           = require 'fs'
-
-  console.log "Resoving component tree..."
-  Components.geather tagname, (components)->
+  Components.geather name, (components)->
 
     ret = []
-    console.log "Compiling components..."
     for type, comp of components
       cret = ["components: #{JSON.stringify(comp.components) or '{}'}"]
       cret.push "events: {"+(for key, method of comp.events
@@ -73,19 +89,17 @@ module.exports.buildJS = (store,tagname,callback)->
     var _components = require('#{__dirname}/components.coffee')
     _components.document = document
     _components.store.db = {#{ret.join(",\n")}}
-    _components.create('#{tagname}',function(element){
+    _components.create('#{name}',function(element){
       document.body.appendChild(element)
     })
     """
     FS.writeFileSync("#{__dirname}/tmp.js", code, 'utf-8' )
 
-    console.log "Creating browser bundle..."
     b = browserify()
     b.add("#{__dirname}/tmp.js")
     b.transform coffeeify
     b.bundle {}, (err,src)->
-      console.log "Compressing..."
       result = UglifyJS.minify(src, {fromString: true})
-      FS.unlink "#{__dirname}/tmp.js"
+      FS.unlinkSync "#{__dirname}/tmp.js"
 
       callback result.code
