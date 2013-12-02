@@ -1,4 +1,4 @@
-# Coffer [![Build Status](https://travis-ci.org/gdotdesign/graphite.png?branch=master)](https://travis-ci.org/gdotdesign/graphite)
+# Coffer [![Build Status](https://travis-ci.org/gdotdesign/coffer.png?branch=master)](https://travis-ci.org/gdotdesign/coffer)
 
 Coffer is a components framework, designed from the ground up to be modular, extensible and easy to use.
 
