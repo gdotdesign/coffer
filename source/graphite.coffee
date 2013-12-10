@@ -4,6 +4,7 @@ module.exports.Stores =
   Firebase: require './stores/firebase'
   File: require './stores/file'
   WebSocket: require './stores/websocket'
+  Waterline: require './stores/waterline'
 
 module.exports.registry = require './registry/registry'
 
