@@ -19,7 +19,7 @@ class WebSocketStore extends Store
     @socket = new ws(path)
     @socket.addEventListener 'message', @route
     @socket.addEventListener 'open', -> callback()
-    setInterval (=> @socket.send('keepalive')), 2000
+    setInterval (=> @query('keepalive')), 2000
 
   # Closes the websocket connection
   close: -> @socket.close()
@@ -41,7 +41,7 @@ class WebSocketStore extends Store
   # @private
   query: (type,data,callback)->
     id = @uid()
-    @map[id] = callback
+    @map[id] = callback if callback
     @socket.send JSON.stringify {id: id, type: type, data: data}
 
   # Lists component names contained in this store
