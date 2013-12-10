@@ -50,7 +50,7 @@ class WaterlineStore extends Store
         component.name = name
         @collection.create(component).then -> callback()
       else
-        @collection.update(component).then -> callback()
+        @collection.update({name: name},component).then -> callback()
 
   # Removes a component from this store
   #
