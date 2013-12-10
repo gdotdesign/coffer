@@ -1,48 +1,19 @@
-Store = require '../store.coffee'
+Store      = require '../store.coffee'
+Waterline  = require 'waterline'
+Collection = Waterline.Collection.extend({adapter: 'store',schema:false})
 
 # WebSocket Store Adapter
-class WebSocketStore extends Store
-
-  # Generated unique identifier for transactions
-  #
-  # @return [String] The uid
-  uid: -> '10000000-1000-0000-0000-000000000000'.replace /0/g, -> (0|Math.random()*16).toString(16)
+class WaterlineStore extends Store
 
   # Constructor
   #
   # @param [WebSocket] ws The WebSocket interface (WebSocket for browser / ws package for node)
   # @param [String] Path the path to connect to
   # @param [Function] callback The callback to call when ready
-  constructor: (ws,path,callback)->
+  constructor: (adapter,callback)->
     throw new Error 'Must provide a callback!' unless callback instanceof Function
-    @map = {}
-    @socket = new ws(path)
-    @socket.addEventListener 'message', @route
-    @socket.addEventListener 'open', -> callback()
-    setInterval (=> @socket.send('keepalive')), 2000
-
-  # Closes the websocket connection
-  close: -> @socket.close()
-
-  # Handles massages
-  #
-  # @param [Event] e The event
-  # @private
-  route: (e)=>
-    {id,data} = JSON.parse e.data
-    @map[id]? data
-    delete @map[id]
-
-  # Sends a constructed message trough the websocket
-  #
-  # @param [String] type The type of the massage
-  # @param [Object] data The data to send
-  # @param [Function] callback The callback to call
-  # @private
-  query: (type,data,callback)->
-    id = @uid()
-    @map[id] = callback
-    @socket.send JSON.stringify {id: id, type: type, data: data}
+    new Collection tableName: 'components', adapters: {store: adapter}, (err,@collection)=>
+      setTimeout => callback()
 
   # Lists component names contained in this store
   #
@@ -50,7 +21,8 @@ class WebSocketStore extends Store
   #
   # @return [Array] The names of the components (in the callback)
   list: (callback)->
-    @query 'list', {}, callback
+    @collection.find().then (items)->
+      callback items.map (item)-> item.name
 
   # Retries a component from this store
   #
@@ -60,9 +32,10 @@ class WebSocketStore extends Store
   # @return [Object] The component (in the callback)
   get: (name,callback)->
     throw new Error "Not enough arguments" if arguments.length is 0
-    @query 'get', { name: name }, (data)=>
-      return callback(null) unless data
-      callback @deserialize data
+    @collection.findOne({name: name}).then (component)=>
+      return callback null unless component
+      delete component.name
+      callback @deserialize component
 
   # Stores a component from this store
   #
@@ -71,8 +44,13 @@ class WebSocketStore extends Store
   # @param [Function] callback The callback to run
   set: (name,component,callback)->
     throw new Error "Not enough arguments" if arguments.length < 2
-    @query 'set', { name: name, data: @serialize component }, (data)=>
-      callback?()
+    component = @serialize component
+    @collection.findOne {name: name}, (err,comp)=>
+      unless comp
+        component.name = name
+        @collection.create(component).then -> callback()
+      else
+        @collection.update(component).then -> callback()
 
   # Removes a component from this store
   #
@@ -80,6 +58,6 @@ class WebSocketStore extends Store
   # @param [Function] callback The callback to run
   remove: (name,callback)->
     throw new Error "Not enough arguments" if arguments.length is 0
-    @query 'remove', {name: name}, callback
+    @collection.destroy({name: name}).then (component)=> callback?()
 
-module.exports = WebSocketStore
+module.exports = WaterlineStore

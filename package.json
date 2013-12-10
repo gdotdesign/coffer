@@ -24,7 +24,9 @@
     "ws"              : "*",
     "redis"           : "*",
     "coffee-coverage" : "*",
-    "nconf"           : "*"
+    "nconf"           : "*",
+    "waterline"       : "*",
+    "sails-memory"    : "*"
   },
   "scripts": {
     "doc": "codo source",

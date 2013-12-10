@@ -1,6 +1,6 @@
 Store = require '../store.coffee'
 Redis = require 'redis'
-URL   = require('url')
+URL   = require 'url'
 
 # Stores components in redis
 class RedisStore extends Store

@@ -34,6 +34,7 @@ class Registry extends Store
   # @param [Object] message The message event
   # @private
   route: (ws, message)->
+    return if message.type is 'keepalive'
     @[message.type] message.data, (data)->
       ws.send JSON.stringify {id: message.id, data: data}
 

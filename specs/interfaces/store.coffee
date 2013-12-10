@@ -11,6 +11,9 @@ module.exports = ->
         test: ->
     @store.set 'test', component, done
 
+  after ->
+    delete @store
+
   describe 'constructor', ->
     it 'should throw error if there isnt a callback', ->
       constructor = Object.getPrototypeOf(@store).constructor
