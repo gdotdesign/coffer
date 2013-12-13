@@ -53,8 +53,9 @@ class Store
     newComponent = {}
 
     # Copy 'static' properties
-    newComponent.css = component.css.toString() if component.css
-    newComponent.components = component.components if component.components
+    for key in Object.keys(component)
+      continue if key is 'properties' or key is 'events'
+      newComponent[key] = if key is 'css' then component[key].toString() else component[key]
 
     # Serialize properties
     if component.properties
