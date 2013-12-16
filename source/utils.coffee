@@ -4,7 +4,7 @@
 Utils =
   # Regexp for validating the tagname
   # probably cheaper then try / catch - createElement
-  TAGNAME_REGEXP: /^[a-zA-Z_:][-a-zA-Z0-9_:.]+$/
+  TAGNAME_REGEXP: /^[a-zA-Z_:]([-a-zA-Z0-9_:.]+)?$/
 
   # Async series minimal implementation
   #
