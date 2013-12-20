@@ -1,12 +1,12 @@
 {
-  "name": "graphite",
+  "name": "coffer",
   "version": "0.0.1",
   "description": "Integrated Components",
-  "homepage": "https://github.com/gdotdesign/graphite",
-  "main": "./source/graphite",
+  "homepage": "https://github.com/gdotdesign/coffer",
+  "main": "./source/coffer",
   "repository": {
     "type": "git",
-    "url": "https://github.com/gdotdesign/graphite.git"
+    "url": "https://github.com/gdotdesign/coffer.git"
   },
   "dependencies" : {
     "coffee-script"   : "*",
