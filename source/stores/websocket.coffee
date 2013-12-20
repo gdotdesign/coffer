@@ -14,12 +14,16 @@ class WebSocketStore extends Store
   # @param [String] Path the path to connect to
   # @param [Function] callback The callback to call when ready
   constructor: (ws,path,callback)->
+    super()
     throw new Error 'Must provide a callback!' unless callback instanceof Function
     @map = {}
     @socket = new ws(path)
     @socket.addEventListener 'message', @route
     @socket.addEventListener 'open', -> callback()
     setInterval (=> @query('keepalive')), 2000
+
+  isCached: (name, time, callback)->
+    @query 'isCached', {name: name, time: +time}, callback
 
   # Closes the websocket connection
   close: -> @socket.close()
@@ -60,9 +64,10 @@ class WebSocketStore extends Store
   # @return [Object] The component (in the callback)
   get: (name,callback)->
     throw new Error "Not enough arguments" if arguments.length is 0
-    @query 'get', { name: name }, (data)=>
-      return callback(null) unless data
-      callback @deserialize data
+    super name, callback, =>
+      @query 'get', { name: name }, (data)=>
+        return callback(null) unless data
+        callback @deserialize data
 
   # Stores a component from this store
   #

@@ -9,6 +9,7 @@ class FirebaseStore extends Store
   # @param [Object] options The options for this instance
   # @param [Function] callback The callback to call when ready
   constructor: (Firebase, options, callback)->
+    super()
     throw new Error 'Must provide a callback!' unless callback instanceof Function
 
     @root = new Firebase("https://#{options.root}.firebaseio.com/#{options.node}/")

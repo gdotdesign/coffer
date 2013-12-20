@@ -7,6 +7,7 @@ class MemoryStore extends Store
   #
   # @param [Function] callback The callback to call when ready
   constructor: (callback)->
+    super()
     throw new Error 'Must provide a callback!' unless callback instanceof Function
     @db = {}
     # This is needed for tests...

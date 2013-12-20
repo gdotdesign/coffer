@@ -38,6 +38,9 @@ class Registry extends Store
     @[message.type] message.data, (data)->
       ws.send JSON.stringify {id: message.id, data: data}
 
+  isCached: (data, callback)->
+    @store.isCached data.name, data.time, callback
+
   # Retrieves a component from this registry
   #
   # @param [String] name The name of the component

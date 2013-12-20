@@ -12,7 +12,6 @@ describe 'Store', ->
   it 'should have a get method', ->
     @store.should.have.property 'get'
     @store.get.should.be.an.instanceOf Function
-    (=> @store.get()).should.throw("Store::get not implemented!")
 
   it 'should have a set method', ->
     @store.should.have.property 'set'

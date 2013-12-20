@@ -10,13 +10,12 @@ Utils = require './utils.coffee'
 # * remove - Must remove a component
 #
 class Store
+  constructor: ->
+    @cache = {}
+
   # Placeholder for the list method
   list: ->
     throw new Error Object.getPrototypeOf(@).constructor.name+'::list not implemented!'
-
-  # Placeholder for the get method
-  get: ->
-    throw new Error Object.getPrototypeOf(@).constructor.name+'::get not implemented!'
 
   # Placeholder for the set method
   set: ->
@@ -25,6 +24,19 @@ class Store
   # Placeholder for the remove methods
   remove: ->
     throw new Error Object.getPrototypeOf(@).constructor.name+'::remove not implemented!'
+
+  isCached: ->
+    arguments[arguments.length-1] false
+
+  # Placeholder for the get method
+  get: (name,callback,body)->
+    # Return if cached
+    @isCached name, Date.now(), (cached) =>
+      return callback @cache[name] if cached
+      # Call body and set cache
+      body (data)=>
+        @cache[name] = data
+        callback data
 
   # Deserialize component
   #

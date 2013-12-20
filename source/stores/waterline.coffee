@@ -11,9 +11,15 @@ class WaterlineStore extends Store
   # @param [String] Path the path to connect to
   # @param [Function] callback The callback to call when ready
   constructor: (adapter,callback)->
+    super()
     throw new Error 'Must provide a callback!' unless callback instanceof Function
     new Collection tableName: 'components', adapters: {store: adapter}, (err,@collection)=>
       setTimeout => callback()
+
+  isCached: (name,time,callback)->
+    return callback false unless @cache[name]
+    @collection.count({name: name, updatedAt: "<": new Date(time) }).limit(1).then (count)->
+      callback count is 1
 
   # Lists component names contained in this store
   #
@@ -32,10 +38,11 @@ class WaterlineStore extends Store
   # @return [Object] The component (in the callback)
   get: (name,callback)->
     throw new Error "Not enough arguments" if arguments.length is 0
-    @collection.findOne({name: name}).then (component)=>
-      return callback null unless component
-      delete component.name
-      callback @deserialize component
+    super name, callback, (cb)=>
+      @collection.findOne({name: name}).then (component)=>
+        return cb null unless component
+        delete component.name
+        cb @deserialize component
 
   # Stores a component from this store
   #

@@ -10,6 +10,7 @@ class RedisStore extends Store
   # @param [String] url The url to the Redis database
   # @param [Function] callback The callback to call when ready
   constructor: (url,callback)->
+    super()
     throw new Error 'Must provide a callback!' unless callback instanceof Function
     @prefix = 'graphite'
 

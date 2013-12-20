@@ -12,11 +12,19 @@ class FileStore extends Store
   # @param [Object] options The options for this instance
   # @param [Function] callback The callback to call when ready
   constructor: (options, callback)->
+    super()
     throw new Error 'Must provide a callback!' unless callback instanceof Function
 
     {@base, @extension} = options
     @extension ?= 'js'
     setTimeout callback
+
+  isCached: (name,date,callback)->
+    return callback false unless @cache[name]
+    path = @getPath name
+    return callback false unless Fs.existsSync path
+    stat = Fs.statSync path
+    callback Date.parse(stat.mtime) < date
 
   # Get path based on base directory
   #
@@ -34,19 +42,20 @@ class FileStore extends Store
   # @return [Object] The component (in the callback)
   get: (name,callback)->
     throw new Error "Not enough arguments" if arguments.length is 0
-    path = @getPath name
-    Fs.exists path, (exists)=>
-      return callback null unless exists
-      Fs.readFile path, (err,data)=>
-        data = data.toString()
-        if @extension is 'coffee'
-          try
-            data = CoffeeScript.compile(data,{bare: true})
-            return callback eval(data)
-        else
-          try
-            return callback eval(data)
-        callback @deserialize JSON.parse data
+    super name, callback, (cb)=>
+      path = @getPath name
+      Fs.exists path, (exists)=>
+        return cb null unless exists
+        Fs.readFile path, (err,data)=>
+          data = data.toString()
+          if @extension is 'coffee'
+            try
+              data = CoffeeScript.compile(data,{bare: true})
+              return cb eval(data)
+          else
+            try
+              return cb eval(data)
+          cb @deserialize JSON.parse data
 
   # Stores a component from this store
   #
