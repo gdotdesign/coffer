@@ -1,9 +1,9 @@
 {
   "name": "coffer",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Integrated Components",
   "homepage": "https://github.com/gdotdesign/coffer",
-  "main": "./source/coffer",
+  "main": "./source/graphite",
   "repository": {
     "type": "git",
     "url": "https://github.com/gdotdesign/coffer.git"
