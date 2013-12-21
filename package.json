@@ -1,6 +1,6 @@
 {
   "name": "coffer",
-  "version": "0.0.3",
+  "version": "0.0.31",
   "description": "Integrated Components",
   "homepage": "https://github.com/gdotdesign/coffer",
   "main": "./source/graphite",
