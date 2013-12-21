@@ -16,9 +16,9 @@ class WaterlineStore extends Store
     new Collection tableName: 'components', adapters: {store: adapter}, (err,@collection)=>
       setTimeout => callback()
 
-  isCached: (name,time,callback)->
+  isCached: (name,callback)->
     return callback false unless @cache[name]
-    @collection.count({name: name, updatedAt: "<": new Date(time) }).limit(1).then (count)->
+    @collection.count({name: name, updatedAt: "<=": @cacheTimes[name] }).limit(1).then (count)->
       callback count is 1
 
   # Lists component names contained in this store

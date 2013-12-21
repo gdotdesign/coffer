@@ -19,12 +19,12 @@ class FileStore extends Store
     @extension ?= 'js'
     setTimeout callback
 
-  isCached: (name,date,callback)->
+  isCached: (name,callback)->
     return callback false unless @cache[name]
     path = @getPath name
     return callback false unless Fs.existsSync path
     stat = Fs.statSync path
-    callback Date.parse(stat.mtime) < date
+    callback Date.parse(stat.mtime) <= @cacheTimes[name]
 
   # Get path based on base directory
   #

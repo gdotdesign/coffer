@@ -12,6 +12,7 @@ Utils = require './utils.coffee'
 class Store
   constructor: ->
     @cache = {}
+    @cacheTimes = {}
 
   # Placeholder for the list method
   list: ->
@@ -31,11 +32,12 @@ class Store
   # Placeholder for the get method
   get: (name,callback,body)->
     # Return if cached
-    @isCached name, Date.now(), (cached) =>
+    @isCached name, (cached) =>
       return callback @cache[name] if cached
       # Call body and set cache
       body (data)=>
         @cache[name] = data
+        @cacheTimes[name] = +new Date()
         callback data
 
   # Deserialize component

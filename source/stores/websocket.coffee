@@ -22,8 +22,9 @@ class WebSocketStore extends Store
     @socket.addEventListener 'open', -> callback()
     setInterval (=> @query('keepalive')), 2000
 
-  isCached: (name, time, callback)->
-    @query 'isCached', {name: name, time: +time}, callback
+  isCached: (name, callback)->
+    return callback false unless @cache[name]
+    @query 'isCached', {name: name}, callback
 
   # Closes the websocket connection
   close: -> @socket.close()
