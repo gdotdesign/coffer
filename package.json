@@ -18,7 +18,7 @@
     "browserify"      : "*",
     "uglify-js"       : "*",
     "coffeeify"       : "*",
-    "clean-css"       : "*",
+    "clean-css"       : "2.0.2",
     "codo"            : "*",
     "stylus"          : "*",
     "ws"              : "*",

@@ -6,7 +6,7 @@ class WebSocketStore extends Store
   # Generated unique identifier for transactions
   #
   # @return [String] The uid
-  uid: -> '10000000-1000-0000-0000-000000000000'.replace /0/g, -> (0|Math.random()*16).toString(16)
+  uid: -> ("0000" + (Math.random()*Math.pow(36,4) << 0).toString(36)).substr(-5)
 
   # Constructor
   #
@@ -65,10 +65,10 @@ class WebSocketStore extends Store
   # @return [Object] The component (in the callback)
   get: (name,callback)->
     throw new Error "Not enough arguments" if arguments.length is 0
-    super name, callback, =>
+    super name, callback, (cb)=>
       @query 'get', { name: name }, (data)=>
-        return callback(null) unless data
-        callback @deserialize data
+        return cb(null) unless data
+        cb @deserialize data
 
   # Stores a component from this store
   #
