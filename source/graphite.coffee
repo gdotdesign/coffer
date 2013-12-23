@@ -6,6 +6,8 @@ module.exports.Stores =
   WebSocket: require './stores/websocket'
   Waterline: require './stores/waterline'
 
+module.exports.components = require './components'
+
 module.exports.registry = require './registry/registry'
 
 # Builds browser client
