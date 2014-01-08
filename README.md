@@ -1,3 +1,4 @@
+[![Stories in Ready](https://badge.waffle.io/gdotdesign/coffer.png?label=ready)](https://waffle.io/gdotdesign/coffer)
 # Coffer [![Build Status](https://travis-ci.org/gdotdesign/coffer.png?branch=master)](https://travis-ci.org/gdotdesign/coffer)
 
 Coffer is a components framework, designed from the ground up to be modular, extensible and easy to use.
