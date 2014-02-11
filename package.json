@@ -9,7 +9,7 @@
     "url": "https://github.com/gdotdesign/coffer.git"
   },
   "dependencies" : {
-    "coffee-script"   : "*",
+    "coffee-script"   : "1.6.3",
     "mincer"          : "*",
     "autoprefixer"    : "*",
     "jsdom"           : "*",
