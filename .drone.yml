@@ -1,0 +1,10 @@
+image: node0.10
+script:
+  - npm install
+  - npm test
+services:
+  - redis
+notify:
+  email:
+    recipients:
+      - guszti5@hotmail.com
